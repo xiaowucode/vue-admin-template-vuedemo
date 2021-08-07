@@ -4,7 +4,7 @@
       <input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)"/>
       <span>{{todo.title}}</span>
     </label>
-    <button class="btn btn-danger">删除</button>
+    <button class="btn btn-danger">删除0332125</button>
   </li>
 </template>
 
