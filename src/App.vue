@@ -4,7 +4,7 @@
       <div class="todo-wrap">
         <MyHeader :addTodo="addTodo"/>
       </div>
-      <MyList :todos="todos" :checkTodo="checkTodo"/>
+      <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"/>
       <MyFooter/>
     </div>
   </div>
@@ -38,6 +38,9 @@
          this.todos.forEach((todo) => {
            if(todo.id === id) todo.done = !todo.done
          })
+      },
+      deleteTodo(id) {
+        this.todos = this.todos.filter( todo => todo.id !== id )
       }
     }
 }
