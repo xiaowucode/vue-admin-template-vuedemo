@@ -3,9 +3,9 @@
     <div class="todo-container">
       <div class="todo-wrap">
         <MyHeader :addTodo="addTodo"/>
+        <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"/>
+        <MyFooter :todos="todos"/>
       </div>
-      <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"/>
-      <MyFooter/>
     </div>
   </div>
 </template>
