@@ -2,9 +2,9 @@
   <div id="app">
     <div class="todo-container">
       <div class="todo-wrap">
-        <MyHeader :addTodo="addTodo"/>
+        <MyHeader @addTodo="addTodo"/>
         <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"/>
-        <MyFooter :todos="todos"/>
+        <MyFooter :todos="todos" @checkAllTodo="checkAllTodo" @clearAllTodo="clearAllTodo"/>
       </div>
     </div>
   </div>
@@ -12,6 +12,7 @@
 
 <script>
 
+  import pubsub from 'pubsub-js';
   import MyHeader from './components/MyHeader.vue';
   import MyFooter from './components/MyFooter.vue';
   import MyList from './components/MyList.vue';
@@ -23,11 +24,7 @@
     },
     data() {
       return {
-        todos:[
-        {id:"001",title:"抽烟",done:true},
-        {id:"002",title:"喝酒",done:false},
-        {id:"003",title:"开车",done:true}
-        ]
+        todos:JSON.parse(localStorage.getItem("todos")) || []
       }
     },
     methods: {
@@ -39,9 +36,33 @@
            if(todo.id === id) todo.done = !todo.done
          })
       },
-      deleteTodo(id) {
+      deleteTodo(_,id) {
         this.todos = this.todos.filter( todo => todo.id !== id )
+      },
+      checkAllTodo(done) {
+        this.todos.forEach( todo => todo.done = done )
+      },
+      clearAllTodo() {
+        this.todos = this.todos.filter( todo => !todo.done)
       }
+    },
+    watch: {
+      todos: {
+        deep: true,
+        handler(value) {
+          localStorage.setItem("todos",JSON.stringify(value))
+        }
+      }
+    },
+    mounted() {
+      this.$bus.$on('checkTodo',this.checkTodo)
+      //this.$bus.$on('deleteTodo',this.deleteTodo)
+      this.pubId = pubsub.subscribe('deleteTodo',this.deleteTodo)
+    },
+    beforeDestroy() {
+      this.$bus.$off('checkTodo')
+      //this.$bus.$off('deleteTodo')
+      pubsub.unsubscribe(this.pubId)
     }
 }
 </script>
