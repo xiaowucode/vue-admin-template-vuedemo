@@ -44,6 +44,11 @@
       },
       clearAllTodo() {
         this.todos = this.todos.filter( todo => !todo.done)
+      },
+      updateTodo(id,value) {
+        this.todos.forEach((todo) => {
+           if(todo.id === id) todo.title = value
+         })
       }
     },
     watch: {
@@ -57,11 +62,13 @@
     mounted() {
       this.$bus.$on('checkTodo',this.checkTodo)
       //this.$bus.$on('deleteTodo',this.deleteTodo)
+      this.$bus.$on('updateTodo',this.updateTodo)
       this.pubId = pubsub.subscribe('deleteTodo',this.deleteTodo)
     },
     beforeDestroy() {
       this.$bus.$off('checkTodo')
       //this.$bus.$off('deleteTodo')
+      this.$bus.$off('updateTodo')
       pubsub.unsubscribe(this.pubId)
     }
 }
@@ -88,9 +95,19 @@
     background-color: #da4f49;
     border: 1px solid #bd362f;
   }
+  .btn-edit {
+    color: #fff;
+    background-color: skyblue;
+    border: 1px solid rgb(92, 142, 161);
+    margin-right: 5px;
+  }
   .btn-danger:hover {
     color: #fff;
     background-color: #bd362f;
+  }
+  .btn-edit:hover {
+    color: #fff;
+    background-color: rgb(92, 142, 161);
   }
   .btn:focus {
     outline: none;
